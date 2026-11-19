@@ -1,0 +1,39 @@
+name: Bug report
+description: Something isn't working
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: build
+    attributes:
+      label: Client build
+      description: Paste the output of `/dump GetBuildInfo()`.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PoisonSlot version
+      description: Shown by `/pslot`.
+  - type: dropdown
+    id: combat
+    attributes:
+      label: In combat?
+      options: ["No", "Yes", "Not sure"]
+  - type: textarea
+    id: errors
+    attributes:
+      label: Lua errors
+      description: Paste any error text (BugSack/BugGrabber help here).
+      render: text
+  - type: textarea
+    id: addons
+    attributes:
+      label: Other addons
+      description: Especially anything that changes the character panel or bags.

@@ -1,0 +1,7 @@
+package-as: PoisonSlot
+
+ignore:
+  - docs
+  - .github
+  - README.md
+  - CONTRIBUTING.md

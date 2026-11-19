@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: PoisonSlot
+## Notes: Rogue poisons on your weapon slots. Pick, favorite and apply poisons per hand from the character panel.
+## Author: Nik Pietanze
+## Version: @project-version@
+## X-License: MIT
+## X-Website: https://github.com/nikpietanze/PoisonSlot
+## X-Category: Combat
+## SavedVariablesPerCharacter: PoisonSlotDB
+
+Core.lua
