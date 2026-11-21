@@ -331,8 +331,8 @@ local function tileIcon(hand, tile)
 	if tile.entry and tile.entry.icon then
 		return tile.entry.icon
 	end
-	local favorite = ns.db.favorites[hand.key]
-	return favorite and C_Item.GetItemIconByID and C_Item.GetItemIconByID(favorite) or ns.VIAL_ICON
+	local wanted = tile.wanted
+	return wanted and C_Item.GetItemIconByID and C_Item.GetItemIconByID(wanted) or ns.VIAL_ICON
 end
 
 local function paintGlow(tile)
@@ -602,15 +602,21 @@ local function syncClickers()
 	for i, hand in ipairs(ns.hands) do
 		local tile, button = tiles[i], clickers[i]
 		local active = tile.visible and tile.state and not demoMode()
-		local entry
+		-- A reminder reapplies the last poison this hand got. Until one has been
+		-- seen, it uses the hand's favorite.
+		local entry, wanted = nil, ns.db.lastPoison[hand.key] or ns.db.favorites[hand.key]
 		if active then
 			if not byID then
 				local _
 				_, byID = ns.ScanBags()
 			end
-			entry = ns.ResolveFavorite(hand, byID)
+			if ns.db.lastPoison[hand.key] then
+				entry = ns.ResolveLastPoison(hand, byID)
+			else
+				entry = ns.ResolveFavorite(hand, byID)
+			end
 		end
-		tile.entry = entry
+		tile.entry, tile.wanted = entry, wanted
 		-- Left-click applies (suffix 1). Right-click has no secure action and
 		-- only snoozes, in PostClick.
 		if entry and ns.db.alertClick then
@@ -637,7 +643,7 @@ end
 
 local function clickerTooltip(button, tile)
 	if not ns.db.tooltips then return end
-	local hand, entry = tile.hand, tile.entry
+	local hand, entry, wanted = tile.hand, tile.entry, tile.wanted
 	GameTooltip:SetOwner(button, "ANCHOR_TOP")
 	if tile.state == "expiring" then
 		GameTooltip:SetText(hand.label .. " poison is expiring", unpack(COLORS.expiring))
@@ -645,10 +651,13 @@ local function clickerTooltip(button, tile)
 		GameTooltip:SetText(hand.label .. " has no poison", unpack(COLORS.missing))
 	end
 	if entry and ns.db.alertClick then
-		GameTooltip:AddDoubleLine("Left-click", "Apply " .. (entry.name or "your favorite"), 1, 0.82, 0, 0.6, 1, 0.45)
+		GameTooltip:AddDoubleLine("Left-click", "Apply " .. (entry.name or "poison"), 1, 0.82, 0, 0.6, 1, 0.45)
 		GameTooltip:AddDoubleLine(" ", ("%d in bags"):format(entry.count), 1, 1, 1, 0.7, 0.7, 0.7)
+	elseif ns.db.alertClick and wanted then
+		local name = C_Item.GetItemNameByID(wanted)
+		GameTooltip:AddLine(("No %s in your bags."):format(name or "matching poison"), 0.7, 0.7, 0.7, true)
 	elseif ns.db.alertClick then
-		GameTooltip:AddLine("Star a poison on the weapon slot to apply it from here.", 0.7, 0.7, 0.7, true)
+		GameTooltip:AddLine("Poison this weapon once and clicking here will reapply it.", 0.7, 0.7, 0.7, true)
 	end
 	GameTooltip:AddDoubleLine("Right-click", "Snooze until next loading screen", 1, 0.82, 0, 1, 1, 1)
 	GameTooltip:AddDoubleLine("Shift-right-click", "Silence until poisoned again", 1, 0.82, 0, 1, 1, 1)

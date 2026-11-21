@@ -149,9 +149,9 @@ ns.OnLoad(function()
 	child("alertCountdown", "Countdown before it runs out",
 		("Count down the final %d seconds of a poison. When off, the reminder only appears once the poison is gone.")
 			:format(ns.COUNTDOWN))
-	child("alertClick", "Click to apply favorite",
-		"Left-click a reminder to apply that hand's favorite poison without opening the Character panel. "
-			.. "Set a favorite by starring a poison in a weapon slot's poison menu.")
+	child("alertClick", "Click to reapply",
+		"Left-click a reminder to reapply the last poison you put on that weapon, without opening the "
+			.. "Character panel. Until you've poisoned it once, it uses the hand's starred favorite.")
 	child("hideWhenResting", "Quiet in towns and inns", "Hide reminders while you are in a rested area.")
 	child("alertHideInCombat", "Hide in combat",
 		"Hide reminders while you are in combat. They come back as soon as combat ends.", applyAlertLayout, false)
