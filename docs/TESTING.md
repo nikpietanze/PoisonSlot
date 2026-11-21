@@ -22,22 +22,24 @@ PoisonSlot's logic is covered by a mocked-client test outside the game, but secu
 |---|---|
 | Missing | Outside a rested area, a weapon with no poison shows a tile for that hand. It fades in and its glow breathes gently. |
 | Countdown | In the last 10 seconds of a poison, the tile shows a swipe and a number counting down. At zero, the glow flares once and the tile switches to **Missing**. |
-| Click to apply | With a favorite set, hovering the tile turns it green and shows the poison. Clicking it applies the poison to that hand only. The tile fills green during the cast, then flashes and lifts away. |
-| No favorite | Without a favorite, clicking the tile does nothing. |
-| Fallback rank | Remove the favorite's exact rank but keep another rank of the same poison. The tile applies that rank. With no rank of that poison left, the tile isn't clickable. |
+| Click to reapply | Apply a poison to a weapon (from bags, an action bar or the tray), let it run out. Hovering the tile shows that same poison, and clicking it applies it to that hand only. The tile fills green during the cast, then flashes and lifts away. |
+| Hands stay separate | Put different poisons on each hand. Each tile reapplies its own hand's poison. |
+| Favorite until history | On a character that hasn't poisoned a weapon since updating, the tile uses the hand's favorite. With neither, the tooltip says to poison the weapon once and clicking does nothing. |
+| Vial keeps favorite | Right-clicking a vial still applies the starred favorite, not the last poison. |
+| Fallback rank | Remove the last poison's exact rank but keep another rank of the same poison. The tile applies that rank. With no rank of that poison left, the tooltip says it isn't in your bags and the tile isn't clickable. |
 | Rested | Entering a town or inn hides the tiles. Leaving brings them back right away. |
 | Combat | No `ADDON_ACTION_BLOCKED` or `ADDON_ACTION_FORBIDDEN` errors. A tile that appears mid-fight becomes clickable once combat ends. |
 | Options | Preview, Move (drag, then Lock or right-click), Reset and the size slider all work. Entering combat while moving locks the tiles. |
 | Edit Mode | **Move** opens Edit Mode with both tiles previewed and a blue selection box labeled "PoisonSlot Reminders". Dragging saves. Selecting it opens a dialog with Icon size, Spacing, Layout, Missing glow, Status text, Hand badges, Reset Position and More options. Switching Edit Mode layouts moves the tiles to that layout's spot. |
 | Glow | A Missing tile shows the action bar proc glow, looping at the tile's size from the first frame with no oversized burst. Pixel, Soft pulse and None all switch live. |
 | Countdown | In the last 5 seconds the number turns red, gets bigger and the icon pulses. Under 3 seconds it shows tenths. |
-| Snooze | Right-clicking a tile hides it. It stays hidden until a loading screen, or until that weapon is poisoned and runs out again. Tiles without a favorite still snooze. |
+| Snooze | Right-clicking a tile hides it. It stays hidden until a loading screen, or until that weapon is poisoned and runs out again. Tiles with nothing to apply still snooze. |
 | Silence | Shift-right-clicking a tile hides it through loading screens. It comes back only after that weapon is poisoned and runs out again, or after a `/reload` or logout. The other hand's tile is unaffected. |
 | Centering | A lone reminder sits in the middle of the screen. When the second one appears, the two slide apart to sit evenly around the middle, and slide back when one goes away. Vertical layout does the same up and down. |
 | Centering in combat | In combat, a tile that's already showing doesn't move. A new one appears right next to it. After combat they slide back to center, and clicking still hits the tile you see. |
 | Hide in combat | With it on, the tiles vanish the moment combat starts, with no errors, and come back after. |
 | Compartment | The PoisonSlot entry in the minimap addons menu opens options on left-click and previews on right-click. |
-| Toggles | Each setting takes effect immediately: Show reminders, Main hand, Off hand, Countdown, Click to apply, Sound, Quiet in towns, Status text, Hand badges, Animations (tiles and tray appear instantly), Tooltips. Children gray out when Show reminders or Poison buttons is off. |
+| Toggles | Each setting takes effect immediately: Show reminders, Main hand, Off hand, Countdown, Click to reapply, Sound, Quiet in towns, Status text, Hand badges, Animations (tiles and tray appear instantly), Tooltips. Children gray out when Show reminders or Poison buttons is off. |
 | Sound | With the sound on, a poison wearing off plays one alert. Logging in with no poison, or leaving town, stays silent. |
 | Migration | A character saved with the old "Missing only" mode loads with Countdown off; "Off" loads with Show reminders off. |
 

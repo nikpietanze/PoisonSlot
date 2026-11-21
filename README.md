@@ -5,7 +5,7 @@ A small World of Warcraft: Forever addon for Rogues. It puts your poisons on the
 - **Pick a poison per hand.** Each weapon slot on the Character panel gets a small vial. Left-click it to see the poisons in your bags, then click one to apply it to that weapon.
 - **Favorite one per hand.** Click the star on a poison to make it that hand's favorite. Main hand and off hand keep separate favorites, saved per character.
 - **Apply the favorite in one click.** Right-click a weapon's vial to apply its favorite. If that hand has no favorite, right-click does nothing.
-- **Reminders you can click.** When a weapon has no poison, a tile for that hand lights up with the action bar's proc glow. In the last 10 seconds before a poison wears off, the tile counts down, turning red and showing tenths at the end. Left-click a tile to apply that hand's favorite without opening the Character panel. Right-click it to snooze it until your next loading screen, or Shift-right-click to silence it until you poison that weapon again (handy when you're out of poisons). A lone reminder sits in the middle; when both show, they spread out evenly around it.
+- **Reminders you can click.** When a weapon has no poison, a tile for that hand lights up with the action bar's proc glow. In the last 10 seconds before a poison wears off, the tile counts down, turning red and showing tenths at the end. Left-click a tile to reapply the last poison you put on that weapon, from your bags, action bar or PoisonSlot (until you've poisoned it once, it uses the hand's favorite). Right-click it to snooze it until your next loading screen, or Shift-right-click to silence it until you poison that weapon again (handy when you're out of poisons). A lone reminder sits in the middle; when both show, they spread out evenly around it.
 - **Edit Mode support.** Move and size the reminders in Blizzard's Edit Mode, with a position saved for each Edit Mode layout.
 
 No poison bar, no chat spam, no automation. Every application is one real click from you.
@@ -17,7 +17,7 @@ Reminders stay quiet while dead and on flight paths. Almost everything else is a
 | Section | Settings |
 |---|---|
 | General | Animations, tooltips |
-| Reminders | Show reminders (master switch), main hand, off hand, countdown before it runs out, click to apply favorite, quiet in towns and inns, hide in combat, sound when a poison runs out |
+| Reminders | Show reminders (master switch), main hand, off hand, countdown before it runs out, click to reapply, quiet in towns and inns, hide in combat, sound when a poison runs out |
 | Reminder appearance | Icon size (24 to 80 px), spacing, horizontal or vertical layout, missing glow (proc, pixel, soft pulse or none), status text, hand badges, plus Preview, Move and Reset |
 | Character panel | Poison buttons on weapon slots, right-click vial to apply favorite, Clear favorites |
 
@@ -25,7 +25,7 @@ Options that depend on another one gray out while it's off. The panel's **Defaul
 
 To move the reminders, click **Move** (or type `/pslot move`) to open Edit Mode, then drag them. Select them in Edit Mode to change their size, spacing, layout, glow and text right there.
 
-If a favorite's exact rank isn't in your bags, PoisonSlot uses the best rank of that same poison you're carrying. It never swaps in a different poison.
+If a favorite's or last poison's exact rank isn't in your bags, PoisonSlot uses the best rank of that same poison you're carrying. It never swaps in a different poison.
 
 ### Combat
 
@@ -44,7 +44,7 @@ The menu ranks poisons for general PvE. Instant Poison comes first on both hands
 | `/pslot move` | Open Edit Mode to move the reminders |
 | `/pslot unlock` / `/pslot lock` | Drag the reminders without Edit Mode (mouse wheel nudges), then lock them |
 | `/pslot reset` | Put the reminders back in their default spot |
-| `/pslot status` | Print client, weapon, poison and favorite details for bug reports |
+| `/pslot status` | Print client, weapon, poison, favorite and last-poison details for bug reports |
 
 ## Install
 

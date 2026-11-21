@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Clicking a reminder now reapplies the last poison you put on that weapon, however you applied it (bags, action bar or PoisonSlot). Until a weapon has been poisoned once, it still uses that hand's favorite. Right-clicking a vial still applies the favorite.
+- `/pslot status` shows each hand's last poison.
+
 ## 1.0.1
 
 - Shift-right-click a reminder to silence it until you poison that weapon again or log out. Handy when you're out of poisons.

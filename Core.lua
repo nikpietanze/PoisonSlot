@@ -11,12 +11,13 @@ ns.BRONZE = { 0.50, 0.39, 0.22 }
 local DB_VERSION = 4
 local DEFAULTS = {
 	favorites = {}, -- Exact poison item ID keyed by "mh" or "oh".
+	lastPoison = {}, -- Last poison item ID applied to each hand, for the reminders.
 	-- Reminders
 	remindersEnabled = true,
 	alertMainHand = true,
 	alertOffHand = true,
 	alertCountdown = true, -- Count down the final seconds before showing Missing.
-	alertClick = true, -- Clicking a reminder applies that hand's favorite.
+	alertClick = true, -- Clicking a reminder reapplies that hand's last poison.
 	alertHideInCombat = false,
 	hideWhenResting = true,
 	-- Reminder appearance
@@ -147,10 +148,12 @@ local function printStatus()
 		local state, remaining = ns.WeaponPoisonState(hand)
 		local favorite = ns.db.favorites[hand.key]
 		local resolved = ns.ResolveFavorite(hand)
-		print(("  %s: weapon=%s eligible=%s poison=%s%s favorite=%s resolved=%s"):format(
+		local lastEntry, last = ns.ResolveLastPoison(hand)
+		print(("  %s: weapon=%s eligible=%s poison=%s%s favorite=%s resolved=%s last=%s reapplies=%s"):format(
 			hand.short, tostring(weapon), tostring(ns.HasEligibleWeapon(hand)), tostring(state),
 			remaining and (" (" .. math.floor(remaining) .. "s)") or "", tostring(favorite),
-			resolved and tostring(resolved.id) or "none"))
+			resolved and tostring(resolved.id) or "none", tostring(last),
+			lastEntry and tostring(lastEntry.id) or "none"))
 		if weapon and not InCombatLockdown() then
 			for _, info in ipairs(C_Item.GetWeaponEnchantInfo(hand.enchantSlot) or {}) do
 				if info.hasEnchant and not ns.IsSecret(info.enchantID) then

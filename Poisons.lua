@@ -111,34 +111,48 @@ function ns.SortPoisons(entries, hand)
 	end)
 end
 
--- Returns the bag entry to use for a hand's favorite, plus the saved favorite
--- ID. The exact starred rank wins. If it is gone, the best usable rank of the
--- same family is used instead. A different family is never substituted.
-function ns.ResolveFavorite(hand, byID)
-	local favorite = ns.db.favorites[hand.key]
-	if not favorite then
-		return nil
-	end
+-- Returns the bag entry to use for a saved poison: the exact rank if it is
+-- usable, otherwise the best usable rank of the same family. A different
+-- family is never substituted.
+local function resolvePoison(id, byID)
 	if not byID then
 		local _
 		_, byID = ns.ScanBags()
 	end
-	local exact = byID[favorite]
+	local exact = byID[id]
 	if ns.IsUsable(exact) then
-		return exact, favorite
+		return exact
 	end
-	local info = poisonsByID[favorite]
+	local info = poisonsByID[id]
 	local best
 	if info then
-		for id, entry in pairs(byID) do
-			local candidate = poisonsByID[id]
+		for itemID, entry in pairs(byID) do
+			local candidate = poisonsByID[itemID]
 			if candidate.family == info.family and ns.IsUsable(entry)
 				and (not best or candidate.rank > poisonsByID[best.id].rank) then
 				best = entry
 			end
 		end
 	end
-	return best, favorite
+	return best
+end
+
+-- The bag entry for a hand's starred favorite, plus the saved favorite ID.
+function ns.ResolveFavorite(hand, byID)
+	local favorite = ns.db.favorites[hand.key]
+	if not favorite then
+		return nil
+	end
+	return resolvePoison(favorite, byID), favorite
+end
+
+-- The bag entry for the last poison applied to a hand, plus its saved ID.
+function ns.ResolveLastPoison(hand, byID)
+	local last = ns.db.lastPoison[hand.key]
+	if not last then
+		return nil
+	end
+	return resolvePoison(last, byID), last
 end
 
 -- Returns "active" | "expiring" | "missing" and the seconds left, or nil when
@@ -161,3 +175,101 @@ function ns.WeaponPoisonState(hand)
 	end
 	return "missing"
 end
+
+---------------------------------------------------------------------------
+-- Last poison per hand
+---------------------------------------------------------------------------
+
+-- The game doesn't say which poison item is on a weapon. So this watches for
+-- a finished poison cast, from anywhere (bags, action bars or PoisonSlot), and
+-- credits it to the hand whose poison timer just restarted.
+local GetItemSpell = C_Item and C_Item.GetItemSpell or GetItemSpell
+local spellToPoison = {}
+local known, pending = {}, nil
+
+local function mapPoisonSpells()
+	if not GetItemSpell then return end
+	for id in pairs(poisonsByID) do
+		local _, spellID = GetItemSpell(id)
+		if spellID and not isSecret(spellID) then
+			spellToPoison[spellID] = id
+		end
+	end
+end
+
+-- When the hand's poison runs out, as a GetTime() value: 0 for no poison, nil
+-- when the client hides it.
+local function poisonExpiry(hand)
+	local enchants = C_Item.GetWeaponEnchantInfo(hand.enchantSlot)
+	if isSecret(enchants) or type(enchants) ~= "table" then return end
+	for _, enchant in ipairs(enchants) do
+		if isSecret(enchant.enchantType) or isSecret(enchant.hasEnchant) or isSecret(enchant.timeLeft) then
+			return
+		end
+		if enchant.hasEnchant and enchant.enchantType == Enum.ItemEnchantType.Imbue
+			and enchant.timeLeft and enchant.timeLeft > 0 then
+			return GetTime() + enchant.timeLeft / 1000
+		end
+	end
+	return 0
+end
+
+local function snapshot()
+	for i, hand in ipairs(ns.hands) do
+		known[i] = poisonExpiry(hand)
+	end
+end
+
+local function settle()
+	if not pending then
+		snapshot()
+		return
+	end
+	local best, bestGain
+	for i, hand in ipairs(ns.hands) do
+		local before, after = pending.before[i], poisonExpiry(hand)
+		if before and after and after > 0 then
+			local gain = after - before
+			if gain > 5 and (not bestGain or gain > bestGain) then
+				best, bestGain = i, gain
+			end
+		end
+	end
+	if best then
+		ns.db.lastPoison[ns.hands[best].key] = pending.item
+		pending = nil
+		snapshot()
+		if ns.RefreshAlerts then ns.RefreshAlerts() end
+	elseif GetTime() > pending.giveUpAt then
+		pending = nil
+		snapshot()
+	end
+end
+
+ns.OnLogin(function()
+	local tracker = CreateFrame("Frame")
+	tracker:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
+	tracker:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player")
+	tracker:RegisterEvent("PLAYER_ENTERING_WORLD")
+	tracker:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+	tracker:RegisterEvent("BAG_UPDATE_DELAYED")
+	tracker:SetScript("OnEvent", function(_, event, _, _, spellID)
+		if event == "UNIT_SPELLCAST_SUCCEEDED" then
+			if isSecret(spellID) then return end
+			local item = spellToPoison[spellID]
+			if not item then return end
+			pending = { item = item, before = CopyTable(known), giveUpAt = GetTime() + 3 }
+			settle()
+			-- The weapon's new timer can land a moment after the cast.
+			C_Timer.After(0.3, settle)
+			C_Timer.After(1.5, settle)
+			C_Timer.After(3.1, settle)
+		elseif event == "BAG_UPDATE_DELAYED" then
+			mapPoisonSpells()
+		else
+			settle()
+		end
+	end)
+	mapPoisonSpells()
+	snapshot()
+end)
