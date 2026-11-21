@@ -1,7 +1,7 @@
 -- On-screen poison reminders: one tile per hand, shown when that hand's poison
 -- is missing or in its final seconds. Left-click applies the hand's favorite
 -- through a secure item action; right-click snoozes until the next loading
--- screen. Positioned through Blizzard's Edit Mode when LibEditMode is present.
+-- screen, Shift-right-click until that weapon is poisoned again or you log out. Positioned through Blizzard's Edit Mode when LibEditMode is present.
 local _, ns = ...
 
 local LEM = LibStub and LibStub("LibEditMode", true)
@@ -35,6 +35,8 @@ hud:SetMovable(true)
 hud:SetFrameStrata("MEDIUM")
 hud.editModeName = "PoisonSlot Reminders"
 
+-- snoozed[i] is "zone" (until the next loading screen) or "session" (until
+-- that weapon is poisoned again or the UI reloads).
 local tiles, clickers, snoozed = {}, {}, {}
 local started, unlocked, editing, previewStart, dragging
 local pendingLayout, combatDriver, appliedScale
@@ -414,6 +416,9 @@ local function createTile(hand)
 	tile.cooldown:SetDrawEdge(false)
 	tile.cooldown:SetDrawBling(false)
 	tile.cooldown:SetHideCountdownNumbers(true)
+	-- The tile draws its own countdown; tell OmniCC-style addons (OmniCC,
+	-- ClassicCooldownCount, tullaCC) not to add a second one.
+	tile.cooldown.noCooldownCount = true
 	tile.cooldown:EnableMouse(false)
 
 	-- Fills green while the poison is being applied.
@@ -646,6 +651,7 @@ local function clickerTooltip(button, tile)
 		GameTooltip:AddLine("Star a poison on the weapon slot to apply it from here.", 0.7, 0.7, 0.7, true)
 	end
 	GameTooltip:AddDoubleLine("Right-click", "Snooze until next loading screen", 1, 0.82, 0, 1, 1, 1)
+	GameTooltip:AddDoubleLine("Shift-right-click", "Silence until poisoned again", 1, 0.82, 0, 1, 1, 1)
 	if InCombatLockdown() then
 		GameTooltip:AddLine("Changes to this button wait until combat ends.", 0.7, 0.7, 0.7, true)
 	end
@@ -675,7 +681,7 @@ local function createClicker(hand, tile, index)
 	end)
 	button:SetScript("PostClick", function(_, mouseButton)
 		if mouseButton == "RightButton" then
-			snoozed[index] = true
+			snoozed[index] = IsShiftKeyDown() and "session" or "zone"
 			GameTooltip:Hide()
 			refresh()
 		else
@@ -1002,7 +1008,9 @@ hud:SetScript("OnEvent", function(_, event)
 		onCast(event)
 		return
 	elseif event == "PLAYER_ENTERING_WORLD" then
-		wipe(snoozed)
+		for i, kind in pairs(snoozed) do
+			if kind == "zone" then snoozed[i] = nil end
+		end
 	end
 	refresh()
 end)

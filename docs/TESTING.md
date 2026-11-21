@@ -32,6 +32,7 @@ PoisonSlot's logic is covered by a mocked-client test outside the game, but secu
 | Glow | A Missing tile shows the action bar proc glow, looping at the tile's size from the first frame with no oversized burst. Pixel, Soft pulse and None all switch live. |
 | Countdown | In the last 5 seconds the number turns red, gets bigger and the icon pulses. Under 3 seconds it shows tenths. |
 | Snooze | Right-clicking a tile hides it. It stays hidden until a loading screen, or until that weapon is poisoned and runs out again. Tiles without a favorite still snooze. |
+| Silence | Shift-right-clicking a tile hides it through loading screens. It comes back only after that weapon is poisoned and runs out again, or after a `/reload` or logout. The other hand's tile is unaffected. |
 | Centering | A lone reminder sits in the middle of the screen. When the second one appears, the two slide apart to sit evenly around the middle, and slide back when one goes away. Vertical layout does the same up and down. |
 | Centering in combat | In combat, a tile that's already showing doesn't move. A new one appears right next to it. After combat they slide back to center, and clicking still hits the tile you see. |
 | Hide in combat | With it on, the tiles vanish the moment combat starts, with no errors, and come back after. |
