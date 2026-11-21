@@ -1,11 +1,25 @@
 ## Interface: 16001
 ## Title: PoisonSlot
-## Notes: Rogue poisons on your weapon slots. Pick, favorite and apply poisons per hand from the character panel.
+## Notes: Rogue poisons on your weapon slots. Pick, favorite and apply poisons per hand, with click-to-apply reminders.
 ## Author: Nik Pietanze
 ## Version: @project-version@
+## IconTexture: 134799
+## Category: Combat
 ## X-License: MIT
 ## X-Website: https://github.com/nikpietanze/PoisonSlot
 ## X-Category: Combat
 ## SavedVariablesPerCharacter: PoisonSlotDB
+## OptionalDeps: LibSharedMedia-3.0
+## AddonCompartmentFunc: PoisonSlot_OnCompartmentClick
+## AddonCompartmentFuncOnEnter: PoisonSlot_OnCompartmentEnter
+## AddonCompartmentFuncOnLeave: PoisonSlot_OnCompartmentLeave
+
+Libs\LibStub\LibStub.lua
+Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml
+Libs\LibEditMode\embed.xml
 
 Core.lua
+Poisons.lua
+WeaponSlots.lua
+Alerts.lua
+Options.lua
