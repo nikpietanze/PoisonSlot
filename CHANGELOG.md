@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- Shift-right-click a reminder to silence it until you poison that weapon again or log out. Handy when you're out of poisons.
+- Reminder countdowns no longer get a second number from OmniCC-style cooldown text addons like OmniCC or ClassicCooldownCount.
+
 ## 1.0.0
 
 First release.
