@@ -85,7 +85,9 @@ local function startGlow(tile)
 	stopGlow(tile)
 	tile.glowStyle = style
 	if style == "proc" then
-		LCG.ProcGlow_Start(tile.top, { key = GLOW_KEY, frameLevel = 4, startAnim = true })
+		-- No start burst: on a reminder-sized icon it flashes about 3.5x too
+		-- big before shrinking to the border. The tile has its own entrance.
+		LCG.ProcGlow_Start(tile.top, { key = GLOW_KEY, frameLevel = 4, startAnim = false })
 	elseif style == "pixel" then
 		LCG.PixelGlow_Start(tile.top, PIXEL_COLOR, 8, 0.2, nil, 2, 1, 1, false, GLOW_KEY, 4)
 	elseif style == "soft" then

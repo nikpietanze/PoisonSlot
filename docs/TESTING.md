@@ -29,7 +29,7 @@ PoisonSlot's logic is covered by a mocked-client test outside the game, but secu
 | Combat | No `ADDON_ACTION_BLOCKED` or `ADDON_ACTION_FORBIDDEN` errors. A tile that appears mid-fight becomes clickable once combat ends. |
 | Options | Preview, Move (drag, then Lock or right-click), Reset and the size slider all work. Entering combat while moving locks the tiles. |
 | Edit Mode | **Move** opens Edit Mode with both tiles previewed and a blue selection box labeled "PoisonSlot Reminders". Dragging saves. Selecting it opens a dialog with Icon size, Spacing, Layout, Missing glow, Status text, Hand badges, Reset Position and More options. Switching Edit Mode layouts moves the tiles to that layout's spot. |
-| Glow | A Missing tile shows the action bar proc glow: a burst, then a loop. Pixel, Soft pulse and None all switch live. |
+| Glow | A Missing tile shows the action bar proc glow, looping at the tile's size from the first frame with no oversized burst. Pixel, Soft pulse and None all switch live. |
 | Countdown | In the last 5 seconds the number turns red, gets bigger and the icon pulses. Under 3 seconds it shows tenths. |
 | Snooze | Right-clicking a tile hides it. It stays hidden until a loading screen, or until that weapon is poisoned and runs out again. Tiles without a favorite still snooze. |
 | Centering | A lone reminder sits in the middle of the screen. When the second one appears, the two slide apart to sit evenly around the middle, and slide back when one goes away. Vertical layout does the same up and down. |
