@@ -1,6 +1,18 @@
-# PoisonSlot
+<p align="center">
+  <img src="docs/logo/logo.png" alt="PoisonSlot logo" width="160">
+</p>
 
-A small World of Warcraft: Forever addon for Rogues. It puts your poisons on the weapon slots where they belong and reminds you when one runs out.
+<h1 align="center">PoisonSlot</h1>
+
+<p align="center">
+  A small World of Warcraft: Forever addon for Rogues. It puts your poisons on the weapon slots where they belong and reminds you when one runs out.
+</p>
+
+<p align="center">
+  <a href="https://github.com/nikpietanze/PoisonSlot/releases/latest"><img src="https://img.shields.io/github/v/release/nikpietanze/PoisonSlot?color=8fd14f" alt="Latest release"></a>
+  <a href="https://www.curseforge.com/projects/1822005"><img src="https://img.shields.io/badge/CurseForge-PoisonSlot-f16436?logo=curseforge" alt="Get it on CurseForge"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/nikpietanze/PoisonSlot?color=b48352" alt="MIT license"></a>
+</p>
 
 - **Pick a poison per hand.** Each weapon slot on the Character panel gets a small vial. Left-click it to see the poisons in your bags, then click one to apply it to that weapon.
 - **Favorite one per hand.** Click the star on a poison to make it that hand's favorite. Main hand and off hand keep separate favorites, saved per character.
