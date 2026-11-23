@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: PoisonSlot
 ## Notes: Rogue poisons on your weapon slots. Pick, favorite and apply poisons per hand, with click-to-apply reminders.
-## Author: Nik Pietanze
+## Author: PoisonSlot contributors
 ## Version: @project-version@
 ## IconTexture: 134799
 ## Category: Combat
